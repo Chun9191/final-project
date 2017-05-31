@@ -1,0 +1,148 @@
+/* Multiple independent delay - Two blinking LEDs
+
+Working code example that blinks two LEDs, each with its own independent period.
+This extends the BlinkWithoutDelay example of a single LED, showing how to
+implement multiple independent timing paths in the main loop.
+
+Written by several forum members. In public domain.  Oct 2011.
+
+Note: works even when millis () wraps around to zero after approximately 50 days.
+*/
+
+// Which pins are connected to which LED, arduino
+const byte LED1 = 8 ;
+const byte LED2 = 9 ;
+const byte LED3 = 10 ;
+
+//attiny85 setting
+//const byte LED1 = 0 ;
+//const byte LED2 = 1 ;
+//const byte LED3 = 2 ;
+
+
+// Time periods of blinks in milliseconds (1000 milliseconds to a second).
+// Time variable and constants are always unsigned long
+const unsigned long LED1interval = 2000 ;
+const unsigned long LED2interval = 4000 ;
+const unsigned long LED3interval = 6000 ;
+
+
+// Variable holding the timer value so far. One for each "Timer"
+unsigned long LED1timer = 0 ;
+unsigned long LED2timer = 0 ;
+unsigned long LED3timer = 0 ;
+
+
+// Variable to know what the current LED state is
+int LED1State = LOW ;
+int LED2State = LOW ;
+int LED3State = LOW ;
+
+
+void setup() {
+ pinMode (LED1,OUTPUT) ;
+ pinMode (LED2,OUTPUT) ;
+  pinMode (LED3,OUTPUT) ;
+
+ LED1timer = millis () ;
+ LED2timer = millis () ;
+ LED3timer = millis () ;
+
+}
+
+void loop() {
+//  LED1timer = millis () ;
+// LED2timer = millis () ;
+// LED3timer = millis () ;
+
+State1();
+//delay(100);
+// Handling the blink of one LED.
+// First, check if it is time to change state
+// if ( (millis () - LED1timer) >= LED1interval ) {
+//   // It is time to change state. Calculate next state.
+//   if (LED1State == LOW && LED3State == LOW)
+//     LED1State = HIGH ;
+//   else
+//     LED1State = LOW ;
+//   // Write new state
+//   digitalWrite (LED1, LED1State ) ;
+//   // Reset timer
+//   LED1timer = millis () ;
+// }
+//
+//// The other LED is controlled the same way. Repeat for more LEDs
+// if ( (millis () - LED2timer) >= LED2interval ) {
+//   if (LED2State == LOW && LED3State == LOW)
+//     LED2State = HIGH ;
+//   else
+//     LED2State = LOW ;
+//   digitalWrite (LED2, LED2State ) ;
+//   
+//   LED2timer = millis () - LED1interval ;
+// }
+//
+//
+// if ( (millis () - LED3timer) >= LED3interval ) {
+//   if (LED3State == LOW)
+//     LED3State = HIGH ;
+//   else
+//     LED3State = LOW ;
+//   digitalWrite (LED3, LED3State ) ;
+//   
+//   LED3timer = millis () - LED2interval ;
+//   }
+
+/* Other code that needs to execute goes here.
+  It will be called many thousands of times per second because the above code
+  does not wait for the LED blink interval to finish. */
+
+}
+
+void State1 () {
+  unsigned long currentLED1timer = millis();
+ unsigned long currentLED2timer = millis();
+  unsigned long currentLED3timer = millis();
+  
+   if ( (millis () - LED1timer) >= LED1interval ) {
+   // It is time to change state. Calculate next state.
+   LED1timer = currentLED1timer;
+   if (LED1State == LOW && LED3State == LOW)
+     LED1State = HIGH ;
+   else
+     LED1State = LOW ;
+   // Write new state
+   digitalWrite (LED1, LED1State ) ;
+   // Reset timer
+   //LED1timer = millis () ;
+ }
+
+// The other LED is controlled the same way. Repeat for more LEDs
+ if ( (millis () - LED2timer) >= LED2interval ) {
+  LED2timer = currentLED2timer;
+  
+   if (LED2State == LOW )
+     LED2State = HIGH ;
+   else
+     LED2State = LOW ;
+   digitalWrite (LED2, LED2State ) ;
+   
+  LED2timer = millis () - LED1interval ;
+
+ //LED2timer = millis () ;
+ }
+
+
+ if ( (millis () - LED3timer) >= LED3interval ) {
+  LED3timer = currentLED3timer ;
+   if (LED3State == LOW)
+     LED3State = HIGH ;
+   else
+     LED3State = LOW ;
+   digitalWrite (LED3, LED3State ) ;
+   
+  // LED3timer = millis () - 60000 ;
+
+  // LED3timer = millis () ;
+   }
+}
